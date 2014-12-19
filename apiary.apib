@@ -1,47 +1,1398 @@
 FORMAT: 1A
 HOST: http://www.google.com
 
-# Notes API
-Notes API is a *short texts saving* service similar to its physical paper presence on your table.
+# KMM app 1.3
+API for KMM iOS app.
 
-# Group Notes
-Notes related resources of the **Notes API**
+# Group Sessions 
 
-## Notes Collection [/notes]
-### List all Notes [GET]
-+ Response 200 (application/json)
+## User's sessions [/login/]
 
-        [{
-          "id": 1, "title": "Jogging in park"
-        }, {
-          "id": 2, "title": "Pick-up posters from post-office"
-        }]
+### Create session using email or facebook[POST]
++ Request
 
-### Create a Note [POST]
-+ Request (application/json)
+    + Headers
 
-        { "title": "Buy cheese and bread for breakfast." }
-
-+ Response 201 (application/json)
-
-        { "id": 3, "title": "Buy cheese and bread for breakfast." }
-
-## Note [/notes/{id}]
-A single Note object with all its details
-
-+ Parameters
-    + id (required, number, `1`) ... Numeric `id` of the Note to perform action with. Has example value.
-
-### Retrieve a Note [GET]
-+ Response 200 (application/json)
-
-    + Header
-
-            X-My-Header: The Value
+            Authorization: session_token
 
     + Body
 
-            { "id": 2, "title": "Pick-up posters from post-office" }
+            {
+                "email" : "user@example.com",
+                "password" : "pass",
+                // OR!
+                "social" : "vk",
+                "id" : "social_id",
+                "token" : "social_token"
+            }  
 
-### Remove a Note [DELETE]
-+ Response 204
++ Response 200 (application/json)
+
+        {
+            "key": "session_token",
+            "user" : "id" 
+        }
+
+### Destroy session [DELETE]
++ Response 200 (application/json)
+
+        {
+            "token": null
+        }
+
+## Mail check [/check_mail?email={mail}]
+
++ Parameters
+    + mail (required, string, `a@mail.com`) ... mail for checking
+    
+### Check for mail [GET]
++ Response 200 (application/json)
+
+        { 
+            "valid":1,
+            "avatar_url":"http://placehold.it/296x296"
+        }
+        
+# Group Registration
+
+## User's registration [/registration]
+
+### Register new user[POST]
++ Request
+
+    + Body
+
+            {
+                "name"  : "Alan Wake"
+                "email" : "user@example.com",
+                "password" : "pass",
+                "password_confirm" : "pass"
+            }  
+
++ Response 200 (application/json)
+
+        {
+            "key": "session_token",
+            "user" : "id" 
+        }
+
+# Group Users 
+Information related to individual users of service.
+
+## User Info [/users/{userId}]
+
++ Parameters
+    + userId (optional, string, `me`) ... ID of user, `me` for currently logged-in user
+
+### Info about user [GET]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+            
++ Response 200 (application/json)
+
+        {
+            "id"        : "someUniqueId",
+            "email"     : "email@mail.com",
+            "name"      : "Василиса",
+            "surname"   : "Пупкина",
+            "age"       : "1978-06-05",
+            "country"   : "Ukraine",
+            "city"      : "Default city",
+            "children"  : [
+                            {
+                                "id"            : "someUniqueId",
+                                "name"          : "Лютик",
+                                "gender"        : "female",
+                                "birthday"      : "2014-06-05",
+                                "description"   : "Блаблалбалабалааблабл балабал",
+                                "photo"        : "http://placehold.it/134x134"
+                            },
+                            
+                            {
+                                "id"            : "someUniqueId",
+                                "name"          : "Лютик2",
+                                "gender"        : "male",
+                                "birthday"      : "2015-06-05",
+                                "description"   : "Инфа о ребенке…",
+                                "photo"        : "http://placehold.it/134x134"
+                            }
+                        ],
+            "avatar"    : "http://placehold.it/220x220",
+            "categories": [
+                            {
+                                "id"            : 0,
+                                "title"         : "Воспитание"
+                            },
+                            {
+                                "id"            : 1,
+                                "title"         : "Беременность и роды"
+                            },
+                            {
+                                "id"            : 3,
+                                "title"         : "Беременность и роды2"
+                            },
+                            {
+                                "id"            : 5,
+                                "title"         : "Воспитание2"
+                            },
+                            
+                            {
+                                "id"            : 4,
+                                "title"         : "Диета и красота2"
+                            }
+                        ]
+        }
+
+### Save user profile [PUT]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+    + Body
+    
+            {
+            "id"        : "someUniqueId",
+            "name"      : "Василиса",
+            "surname"   : "Пупкина",
+            "age"       : "1978-06-05",
+            "country"   : "Ukraine",
+            "city"      : "Default city",
+            "children"  : [
+                            {
+                                "id"            : "someUniqueId",
+                                "name"          : "Лютик",
+                                "gender"        : "female",
+                                "birthday"      : "2014-06-05",
+                                "description"   : "Блаблалбалабалааблабл балабал",
+                                "photo"        : "http://placehold.it/134x134"
+                            },
+                            
+                            {
+                                "id"            : "someUniqueId",
+                                "name"          : "Лютик2",
+                                "gender"        : "male",
+                                "birthday"      : "2015-06-05",
+                                "description"   : "Инфа о ребенке…",
+                                "photo"        : "http://placehold.it/134x134"
+                            }
+                        ],
+            "avatar"    : "http://placehold.it/220x220",
+            "categories": [
+                            
+                        ]
+            }
+
++ Response 200
+
+## User photo [/update_photo]
+
+### Update user avatar [POST]
+
++ Request(multipart/form-data)
+
+    + Headers
+
+            Authorization: session_token
+
+    + Body
+        
+            photo: photo data
+
++ Response 200
+
+## User city [/city]
+
+### Locations [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
++ Response 200 (application/json)
+
+            {
+                   
+             "Украина": 
+                   [
+                       "Киев",
+                       "Харьков",
+                       "Одесса",
+                       "Днепропетровск",
+                       "Донецк",
+                       "Запорожье"
+                     ],
+            "Россия": 
+                   [
+                       "Москва",
+                       "Екатеринбург",
+                       "Воронеж",
+                       "Санкт-Петербург"
+                    ]
+            }
+
+### Update user location [POST]
+
++ Request
+
+    + Body
+
+            {
+                "country"   : "Украина"
+                "city"      : "Киев"
+            }  
+
++ Response 200 (application/json)
+
+        {
+            "info" : "ok" 
+        }
+
+# Group Pregnancy
+
+
+## Pregnancy status [/user/pregnancy]
+
+### Get Pregnancy [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: session_token
+            
++ Response 200 (application/json)
+
+            {
+            "pregnancy_status"       : false,
+            "pregnancy_planning"     : false,
+            "already_children"       : true,
+            "pregnancy_days"         : 0,
+            "pregnancy_weeks"        : 0
+            }
+            
+
+### Update pregnancy [POST]
+
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+    + Body
+
+            {
+            "pregnancy_status"       : false,
+            "pregnancy_planning"     : false,
+            "already_children"       : true,
+            "pregnancy_days"         : 0,
+            "pregnancy_weeks"        : 0
+            }
+
++ Response 200 (application/json)
+
+
+# Group Day poll
+
+## Day poll [/day_poll]
+
+### Get Pregnancy [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: session_token
+            
++ Response 200 (application/json)
+
+            {
+                "dayPollFeedId" : 3
+            }
+
+# Group Children https://github.com/klubmmam/kmm_release/wiki/Дети
+
+# Group Categories
+
+## All Categories [/categories]
+    
+### Get all categories [GET]
+            
++ Response 200 (application/json)
+
+        [
+            { 
+            "id"        :1,
+            "title"     :"От рождения до года",
+            "subscribe" :0
+            },
+            { 
+            "id"        :2,
+            "title"     :"От года до трех",
+            "subscribe" :0
+            },
+            { 
+            "id"        :3,
+            "title"     :"Дошкольники",
+            "subscribe" :1
+            },
+            { 
+            "id"        :4,
+            "title"     :"Школьники",
+            "subscribe" :0
+            },
+            { 
+            "id"        :5,
+            "title"     :"Здоровье мам",
+            "subscribe" :0
+            },
+            { 
+            "id"        :6,
+            "title"     :"Диета и красота",
+            "subscribe" :1
+            },
+            { 
+            "id"        :7,
+            "title"     :"Отношения и секс",
+            "subscribe" :0
+            },
+            { 
+            "id"        :8,
+            "title"     :"Дом и быт",
+            "subscribe" :0
+            },
+            { 
+            "id"        :9,
+            "title"     :"Хобби и спорт",
+            "subscribe" :1
+            },
+            { 
+            "id"        :10,
+            "title"     :"Развлечения и отдых",
+            "subscribe" :1
+            },
+            { 
+            "id"        :11,
+            "title"     :"Юридические вопросы",
+            "subscribe" :0
+            }
+        ]
+
+## User subscribed categories [/user/categories]
+    
+### Get user subscribed categories [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: session_token
+            
++ Response 200 (application/json)
+
+        [
+            { 
+            "id"        :1,
+            "title"     :"От рождения до года",
+            "subscribe" :0
+            },
+            { 
+            "id"        :4,
+            "title"     :"Школьники",
+            "subscribe" :0
+            },
+            { 
+            "id"        :5,
+            "title"     :"Здоровье мам",
+            "subscribe" :0
+            },
+            { 
+            "id"        :6,
+            "title"     :"Диета и красота",
+            "subscribe" :1
+            },
+            { 
+            "id"        :9,
+            "title"     :"Хобби и спорт",
+            "subscribe" :1
+            },
+            { 
+            "id"        :10,
+            "title"     :"Развлечения и отдых",
+            "subscribe" :1
+            }
+        ]
+
+### Edit user categories [POST]
+//Виталий, в wiki немного по другому. Мне принципиальной разницы нету, будут ли объекты либо же просто массив https://github.com/klubmmam/kmm_release/wiki/Категории
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+    + Body
+
+            {
+                "categories_id": [1, 2]
+            }  
+
++ Response 200 (application/json)
+
+        [
+            { 
+            "id"        :1,
+            "title"     :"От рождения до года",
+            "subscribe" :0
+            },
+            { 
+            "id"        :4,
+            "title"     :"Школьники",
+            "subscribe" :0
+            },
+            { 
+            "id"        :5,
+            "title"     :"Здоровье мам",
+            "subscribe" :0
+        ]
+
+# Group Feed 
+Feed info. Feed items and comments.
+
+## Full feed [/content_all/{mode}/]
+
++ Parameters
+    + mode (required, string, `new`) ... feed mode: `new`, `popular`
+
+### Get all feed items [GET]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+
++ Response 200 (application/json)
+ 
+        [{
+            "pk":1,
+            "content_type":2,
+            "category":1,
+            "title":"Что включать в первый прикорм ребенка?",
+            "text":"Введение прикорма детям - это первый шаг к формированию здоровья малыша, знакомство с разнообразием вкусов и становление навыков",
+            "creation_date":"2014-03-25T20:38:16Z",
+            "images":null,
+            "poll_question":null,
+            "poll_choices":null,
+            "poll_results":null,
+            "voted":null,
+            "votes_count":null,
+            "number_comments":122,
+            "author_user":{
+                                "id"        : "someUniqueId",
+                                "email"     : "email@mail.com",
+                                "name"      : "Василиса",
+                                "surname"   : "Пупкина",
+                                "age"       : "1978-06-05",
+                                "country"   : "Ukraine",
+                                "city"      : "Default city",
+                                "children"  : [
+                                                    {
+                                                        "id"            : "someUniqueId",
+                                                        "name"          : "Лютик",
+                                                        "gender"        : "female",
+                                                        "birthday"      : "2014-06-05",
+                                                        "description"   : "Блаблалбалабалааблабл балабал",
+                                                        "photo"        : "http://placehold.it/134x134"
+                                                    },
+                            
+                                                    {
+                                                        "id"            : "someUniqueId",
+                                                        "name"          : "Лютик2",
+                                                        "gender"        : "male",
+                                                        "birthday"      : "2015-06-05",
+                                                        "description"   : "Инфа о ребенке…",
+                                                        "photo"        : "http://placehold.it/134x134"
+                                                    }
+                                                ],
+                                "avatar"    : "http://placehold.it/220x220"
+                            }
+        },
+        {
+            "pk":2,
+            "content_type":1,
+            "category":1,
+            "title":"Стоит ли малышу спать с мамой?",
+            "text":"Многие родители задаются этим вопросом. Мнения у всех разные.",
+            "creation_date":"2014-04-07T12:43:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question":null,
+            "poll_choices":null,
+            "poll_results":null,
+            "voted":null,
+            "votes_count":null,
+            "number_comments":122,
+            "author_user":{
+                            "id":2,
+                            "name":"Вера Захарова",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":3,
+            "content_type":3,
+            "category":1,
+            "title":"Чем занять ребенка дома?\nСоветы молодым мамам",
+            "text":"Оказывается, совмещать ведение домашнего хозяйства и уход за ребенком под силу любой маме",
+            "creation_date":"2014-07-01T20:38:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question": "Хотите отдать ребенка в детский сад?",
+            "poll_choices":[  
+                                "я против того, чтобы отдавать ребенка в детский сад",
+                                "только перед школой для адаптации к коллективу",
+                                "не раньше 3-х лет",
+                                "до 2-х лет"
+                            ],
+            "poll_results":null,
+            "voted":0,
+            "votes_count":12,
+            "number_comments":122,
+            "author_user":{
+                            "id":3,
+                            "name":"Полиграф Полиграфович",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":4,
+            "content_type":2,
+            "category":1,
+            "title":"Что включать в первый прикорм ребенка?",
+            "text":"Введение прикорма детям - это первый шаг к формированию здоровья малыша, знакомство с разнообразием вкусов и становление навыков",
+            "creation_date":"2014-03-25T20:38:16Z",
+            "images":null,
+            "poll_question":null,
+            "poll_choices":null,
+            "poll_results":null,
+            "voted":null,
+            "votes_count":null,
+            "number_comments":122,
+            "author_user":{
+                            "id":1,
+                            "name":"Ирина Иванова",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":5,
+            "content_type":1,
+            "category":1,
+            "title":"Стоит ли малышу спать с мамой?",
+            "text":"Многие родители задаются этим вопросом. Мнения у всех разные.",
+            "creation_date":"2014-04-07T12:43:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question":null,
+            "poll_choices":null,
+            "poll_results":null,
+            "voted":null,
+            "votes_count":null,
+            "number_comments":122,
+            "author_user":{
+                            "id":2,
+                            "name":"Вера Захарова",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":6,
+            "content_type":3,
+            "category":1,
+            "title":"Чем занять ребенка дома?\nСоветы молодым мамам",
+            "text":"Оказывается, совмещать ведение домашнего хозяйства и уход за ребенком под силу любой маме",
+            "creation_date":"2014-07-01T20:38:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question": "Хотите отдать ребенка в детский сад?",
+            "poll_choices":[  
+                                "я против того, чтобы отдавать ребенка в детский сад",
+                                "только перед школой для адаптации к коллективу",
+                                "не раньше 3-х лет",
+                                "до 2-х лет"
+                            ],
+            "poll_results":null,
+            "voted":0,
+            "votes_count":12,
+            "number_comments":122,
+            "author_user":{
+                            "id":3,
+                            "name":"Полиграф Полиграфович",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        }]
+
+## Feed polls and discussions [/content_dis_int/{mode}]
+
++ Parameters
+    + mode (required, string, `new`) ... feed mode: `new`, `popular`, `my`
+    
+### Get polls and discussions [GET]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+            
++ Response 200 (application/json)
+ 
+        [{
+            "pk":2,
+            "content_type":1,
+            "category":1,
+            "title":"Стоит ли малышу спать с мамой?",
+            "text":"Многие родители задаются этим вопросом. Мнения у всех разные.",
+            "creation_date":"2014-04-07T12:43:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question":null,
+            "poll_choices":null,
+            "poll_results":null,
+            "voted":null,
+            "votes_count":null,
+            "number_comments":122,
+            "author_user":{
+                            "id":2,
+                            "name":"Вера Захарова",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":3,
+            "content_type":3,
+            "category":1,
+            "title":"Чем занять ребенка дома?\nСоветы молодым мамам",
+            "text":"Оказывается, совмещать ведение домашнего хозяйства и уход за ребенком под силу любой маме",
+            "creation_date":"2014-07-01T20:38:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question": "Хотите отдать ребенка в детский сад?",
+            "poll_choices":[  
+                                "я против того, чтобы отдавать ребенка в детский сад",
+                                "только перед школой для адаптации к коллективу",
+                                "не раньше 3-х лет",
+                                "до 2-х лет"
+                            ],
+            "poll_results":null,
+            "voted":0,
+            "votes_count":12,
+            "number_comments":122,
+            "author_user":{
+                            "id":3,
+                            "name":"Полиграф Полиграфович",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":5,
+            "content_type":1,
+            "category":1,
+            "title":"Стоит ли малышу спать с мамой?",
+            "text":"Многие родители задаются этим вопросом. Мнения у всех разные.",
+            "creation_date":"2014-04-07T12:43:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question":null,
+            "poll_choices":null,
+            "poll_results":null,
+            "voted":null,
+            "votes_count":null,
+            "number_comments":122,
+            "author_user":{
+                            "id":2,
+                            "name":"Вера Захарова",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":6,
+            "content_type":3,
+            "category":1,
+            "title":"Чем занять ребенка дома?\nСоветы молодым мамам",
+            "text":"Оказывается, совмещать ведение домашнего хозяйства и уход за ребенком под силу любой маме",
+            "creation_date":"2014-07-01T20:38:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question": "Хотите отдать ребенка в детский сад?",
+            "poll_choices":[  
+                                "я против того, чтобы отдавать ребенка в детский сад",
+                                "только перед школой для адаптации к коллективу",
+                                "не раньше 3-х лет",
+                                "до 2-х лет"
+                            ],
+            "poll_results":null,
+            "voted":0,
+            "votes_count":12,
+            "number_comments":122,
+            "author_user":{
+                            "id":3,
+                            "name":"Полиграф Полиграфович",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        }]
+
+## Feed advices [/content_adv/{mode}]
+
++ Parameters
+    + mode (required, string, `new`) ... feed mode: `new`, `popular`
+    
+### Get feed advices [GET]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+            
++ Response 200 (application/json)
+ 
+        [{
+            "pk":1,
+            "content_type":2,
+            "category":1,
+            "title":"Что включать в первый прикорм ребенка?",
+            "text":"Введение прикорма детям - это первый шаг к формированию здоровья малыша, знакомство с разнообразием вкусов и становление навыков",
+            "creation_date":"2014-03-25T20:38:16Z",
+            "images":null,
+            "poll_question":null,
+            "poll_choices":null,
+            "poll_results":null,
+            "voted":null,
+            "votes_count":null,
+            "number_comments":122,
+            "author_user":{
+                            "id":1,
+                            "name":"Ирина Иванова",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":4,
+            "content_type":2,
+            "category":1,
+            "title":"Что включать в первый прикорм ребенка?",
+            "text":"Введение прикорма детям - это первый шаг к формированию здоровья малыша, знакомство с разнообразием вкусов и становление навыков",
+            "creation_date":"2014-03-25T20:38:16Z",
+            "images":null,
+            "poll_question":null,
+            "poll_choices":null,
+            "poll_results":null,
+            "voted":null,
+            "votes_count":null,
+            "number_comments":122,
+            "author_user":{
+                            "id":1,
+                            "name":"Ирина Иванова",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        }]
+
+## Feed items with replies [/replies]
+    
+### Get all feed items [GET]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+
++ Response 200 (application/json)
+ 
+        [{
+            "pk":1,
+            "content_type":2,
+            "category":1,
+            "title":"Что включать в первый прикорм ребенка?",
+            "text":"Введение прикорма детям - это первый шаг к формированию здоровья малыша, знакомство с разнообразием вкусов и становление навыков",
+            "creation_date":"2014-03-25T20:38:16Z",
+            "images":null,
+            "poll_question":null,
+            "poll_choices":null,
+            "poll_results":null,
+            "voted":null,
+            "votes_count":null,
+            "number_comments":122,
+            "readed":0,
+            "author_user":{
+                            "id":1,
+                            "name":"Ирина Иванова",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":2,
+            "content_type":1,
+            "category":1,
+            "title":"Стоит ли малышу спать с мамой?",
+            "text":"Многие родители задаются этим вопросом. Мнения у всех разные.",
+            "creation_date":"2014-04-07T12:43:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question":null,
+            "poll_choices":null,
+            "poll_results":null,
+            "voted":null,
+            "votes_count":null,
+            "number_comments":122,
+            "readed":0,
+            "author_user":{
+                            "id":2,
+                            "name":"Вера Захарова",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":3,
+            "content_type":3,
+            "category":1,
+            "title":"Чем занять ребенка дома?\nСоветы молодым мамам",
+            "text":"Оказывается, совмещать ведение домашнего хозяйства и уход за ребенком под силу любой маме",
+            "creation_date":"2014-07-01T20:38:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question": "Хотите отдать ребенка в детский сад?",
+            "poll_choices":[  
+                                "я против того, чтобы отдавать ребенка в детский сад",
+                                "только перед школой для адаптации к коллективу",
+                                "не раньше 3-х лет",
+                                "до 2-х лет"
+                            ],
+            "poll_results":null,
+            "voted":0,
+            "votes_count":12,
+            "number_comments":0,
+            "readed":1,
+            "author_user":{
+                            "id":3,
+                            "name":"Полиграф Полиграфович",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":4,
+            "content_type":2,
+            "category":1,
+            "title":"Что включать в первый прикорм ребенка?",
+            "text":"Введение прикорма детям - это первый шаг к формированию здоровья малыша, знакомство с разнообразием вкусов и становление навыков",
+            "creation_date":"2014-03-25T20:38:16Z",
+            "images":null,
+            "poll_question":null,
+            "poll_choices":null,
+            "poll_results":null,
+            "voted":null,
+            "votes_count":null,
+            "number_comments":0,
+            "readed":1,
+            "author_user":{
+                            "id":1,
+                            "name":"Ирина Иванова",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":5,
+            "content_type":1,
+            "category":1,
+            "title":"Стоит ли малышу спать с мамой?",
+            "text":"Многие родители задаются этим вопросом. Мнения у всех разные.",
+            "creation_date":"2014-04-07T12:43:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question":null,
+            "poll_choices":null,
+            "poll_results":null,
+            "voted":null,
+            "votes_count":null,
+            "number_comments":0,
+            "readed":1,
+            "author_user":{
+                            "id":2,
+                            "name":"Вера Захарова",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":6,
+            "content_type":3,
+            "category":1,
+            "title":"Чем занять ребенка дома?\nСоветы молодым мамам",
+            "text":"Оказывается, совмещать ведение домашнего хозяйства и уход за ребенком под силу любой маме",
+            "creation_date":"2014-07-01T20:38:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question": "Хотите отдать ребенка в детский сад?",
+            "poll_choices":[  
+                                "я против того, чтобы отдавать ребенка в детский сад",
+                                "только перед школой для адаптации к коллективу",
+                                "не раньше 3-х лет",
+                                "до 2-х лет"
+                            ],
+            "poll_results":null,
+            "voted":0,
+            "votes_count":12,
+            "number_comments":0,
+            "readed":1,
+            "author_user":{
+                            "id":3,
+                            "name":"Полиграф Полиграфович",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        }]
+
+# Group Favorites
+
+## Favorite feed [/favorites]
+
+### Get favorite feed items [GET]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+
++ Response 200 (application/json)
+ 
+        [{
+            "pk":3,
+            "content_type":3,
+            "category":1,
+            "title":"Чем занять ребенка дома?\nСоветы молодым мамам",
+            "text":"Оказывается, совмещать ведение домашнего хозяйства и уход за ребенком под силу любой маме",
+            "creation_date":"2014-07-01T20:38:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question": "Хотите отдать ребенка в детский сад?",
+            "poll_choices":[  
+                                "я против того, чтобы отдавать ребенка в детский сад",
+                                "только перед школой для адаптации к коллективу",
+                                "не раньше 3-х лет",
+                                "до 2-х лет"
+                            ],
+            "poll_results":null,
+            "voted":0,
+            "votes_count":12,
+            "number_comments":122,
+            "author_user":{
+                            "id":3,
+                            "name":"Полиграф Полиграфович",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":4,
+            "content_type":2,
+            "category":1,
+            "title":"Что включать в первый прикорм ребенка?",
+            "text":"Введение прикорма детям - это первый шаг к формированию здоровья малыша, знакомство с разнообразием вкусов и становление навыков",
+            "creation_date":"2014-03-25T20:38:16Z",
+            "images":null,
+            "poll_question":null,
+            "poll_choices":null,
+            "poll_results":null,
+            "voted":null,
+            "votes_count":null,
+            "number_comments":122,
+            "author_user":{
+                            "id":1,
+                            "name":"Ирина Иванова",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        },
+        {
+            "pk":6,
+            "content_type":3,
+            "category":1,
+            "title":"Чем занять ребенка дома?\nСоветы молодым мамам",
+            "text":"Оказывается, совмещать ведение домашнего хозяйства и уход за ребенком под силу любой маме",
+            "creation_date":"2014-07-01T20:38:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question": "Хотите отдать ребенка в детский сад?",
+            "poll_choices":[  
+                                "я против того, чтобы отдавать ребенка в детский сад",
+                                "только перед школой для адаптации к коллективу",
+                                "не раньше 3-х лет",
+                                "до 2-х лет"
+                            ],
+            "poll_results":null,
+            "voted":0,
+            "votes_count":12,
+            "number_comments":122,
+            "author_user":{
+                            "id":3,
+                            "name":"Полиграф Полиграфович",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        }]
+
+## Add to favorites [/favorite_add]
+
+### Add feed item to favorites[POST]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+    + Body
+
+            {
+                "content_id" : 1
+            }  
+
++ Response 200 (application/json)
+
+        { }
+        
+## Remove from favorites [/favorite_rem]
+
+### Remove feed item from favorites[POST]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+    + Body
+
+            {
+                "content_id" : 1
+            }  
+
++ Response 200 (application/json)
+
+        { }
+
+#Group Add discussion
+
+## Add discussion [/add_feed]
+
+### Add discussion or poll [POST]
+
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+    + Body
+
+            {
+                "content_type":3,
+                "category":1,
+                "title":"Чем занять ребенка дома?\nСоветы молодым мамам",
+                "text":"Оказывается, совмещать ведение домашнего хозяйства и уход за ребенком под силу любой маме",
+                "poll_question": "Хотите отдать ребенка в детский сад?",
+                "poll_choices":[  
+                                    "я против того, чтобы отдавать ребенка в детский сад",
+                                    "только перед школой для адаптации к коллективу",
+                                    "не раньше 3-х лет",
+                                    "до 2-х лет"
+                                ],
+            } 
+
++ Response 200 (application/json)
+
+        { }
+
+# Group Comments
+
+## Feed item comments [/comments/content={contentId}]
+
++ Parameters
+    + contentId (string, `1`) ... ID of feed item
+
+### Get comments for feed item [GET]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+            
++ Response 200 (application/json)
+
+        [{ 
+            "pk":1,
+            "message":"Комментарий!", 
+            "sub_content":null,
+            "date":"2014-06-05T20:38:16Z",
+            "author":{
+                        "id":1,
+                        "name":"Вася Иванов",
+                        "avatar":"http://placehold.it/84x84"
+                    }    
+        },
+        {
+            "pk":2,
+            "message":"Комментарий!",
+            "sub_content":null,
+            "date":"2014-06-05T20:38:16Z",
+            "author":{
+                        "id":2,
+                        "name":"Илья Петров",
+                        "avatar":"http://placehold.it/84x84"
+                    }
+        },
+        {
+            "pk":3,
+            "message":"Комментарий!",
+            "quote":"Илья Петров: Комментарий!",
+            "sub_content":2,
+            "date":"2014-06-05T20:38:16Z",
+            "author":{
+                        "id":3,
+                        "name":"Полиграф Полиграфович",
+                        "avatar":"http://placehold.it/84x84"
+                    },
+            "quoted_author":{
+                        "id":2,
+                        "name":"Илья Петров",
+                        "avatar":"http://placehold.it/84x84"
+                    }
+        }]
+
+## Add feed item comment [/add_comment]
+
+### Add comment for feed item [POST]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+    + Body
+
+            {
+                "feed_id" : 1,
+                "comment_id" : 1,
+                "message" : "Отличный совет",
+                "quote" : "Больше гуляйте пешком",
+                "quoted_author" : {
+                        "id":1,
+                        "name":"Вася Иванов"
+                    }
+            }  
+
++ Response 200 (application/json)
+
+        [{ 
+            "id":1,
+            "message":"Комментарий!", 
+            "sub_content":null,
+            "date":"2014-06-05T20:38:16Z",
+            "author":{
+                        "id":1,
+                        "name":"Вася Иванов",
+                        "avatar":"http://placehold.it/84x84"
+                    },
+            "quoted_author" : {
+                        "id":1,
+                        "name":"Вася Иванов"
+                    }    
+        },
+        {
+            "id":4,
+            "message":"Комментарий!",
+            "sub_content":1,
+            "date":"2014-06-05T20:38:16Z",
+            "author":{
+                        "id":2,
+                        "name":"Илья Петров",
+                        "avatar":"http://placehold.it/84x84"
+                    },
+            "quoted_author" : {
+                        "id":1,
+                        "name":"Вася Иванов"
+                    }
+        },
+        {
+            "id":2,
+            "message":"Комментарий!",
+            "sub_content":null,
+            "date":"2014-06-05T20:38:16Z",
+            "author":{
+                        "id":2,
+                        "name":"Илья Петров",
+                        "avatar":"http://placehold.it/84x84"
+                    },
+            "quoted_author" : {
+                        "id":1,
+                        "name":"Вася Иванов"
+                    }
+        },
+        {
+            "id":3,
+            "message":"Комментарий!",
+            "sub_content":2,
+            "date":"2014-06-05T20:38:16Z",
+            "author":{
+                        "id":3,
+                        "name":"Полиграф Полиграфович",
+                        "avatar":"http://placehold.it/84x84"
+                    },
+            "quoted_author" : {
+                        "id":1,
+                        "name":"Вася Иванов"
+                    }
+        },
+        {
+            "id":5,
+            "message":"Комментарий!",
+            "sub_content":null,
+            "date":"2014-06-05T20:38:16Z",
+            "author":{
+                        "id":2,
+                        "name":"Илья Петров",
+                        "avatar":"http://placehold.it/84x84"
+                    },
+            "quoted_author" : {
+                        "id":1,
+                        "name":"Вася Иванов"
+                    }
+        },
+        {
+            "id":6,
+            "message":"Комментарий!",
+            "sub_content":null,
+            "date":"2014-06-05T20:38:16Z",
+            "author":{
+                        "id":3,
+                        "name":"Полиграф Полиграфович",
+                        "avatar":"http://placehold.it/84x84"
+                    },
+            "quoted_author" : {
+                        "id":1,
+                        "name":"Вася Иванов"
+                    }
+        }]
+
+
+# Group Settings
+
+## User settings [/settings]
+
+### Get user settings [GET]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+            
++ Response 200 (application/json)
+
+        { 
+            "push_notice":1,
+            "email_notice":1
+        }
+        
+### Save user settings [PUT]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+    + Body
+    
+            {
+                "push_notice":1,
+                "email_notice":1
+            }
+
++ Response 200 (application/json)
+
+        {
+            "push_notice":1,
+            "email_notice":1
+        }
+
+
+# Group Password
+
+## User password [/password]
+
+### Change user password [PUT]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+    + Body
+    
+            {
+                "old_password":"oldpassword"
+                "password":"password",
+                "password_confirm":"passwordconfirm"
+            }
+
++ Response 200 (application/json)
+
+        {
+            "password":"password"
+        }
+        
+## Recover password [/recover_password]
+
+### Change user password [POST]
++ Request
+    + Body
+    
+            {
+                "email":"mail@mail.com"
+            }
+
++ Response 200 (application/json)
+
+        {}
+        
+
+#Group Voting
+
+## Poll voting [/vote]
+
+### Vote [POST]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+    + Body
+    
+            {
+                "feedItemId":1,
+                "voteId":2
+            }
+    
++ Response 200 (application/json)
+    
+        {
+            "pk":1,
+            "content_type":3,
+            "category":1,
+            "title":"Чем занять ребенка дома?\nСоветы молодым мамам",
+            "text":"Оказывается, совмещать ведение домашнего хозяйства и уход за ребенком под силу любой маме",
+            "creation_date":"2014-07-01T20:38:16Z",
+            "images":["http://placehold.it/584x432", "http://placehold.it/584x584", "http://placehold.it/432x432"],
+            "poll_question": "Хотите отдать ребенка в детский сад?",
+            "poll_choices":[  
+                                "я против того, чтобы отдавать ребенка в детский сад",
+                                "только перед школой для адаптации к коллективу",
+                                "не раньше 3-х лет",
+                                "до 2-х лет"
+                            ],
+            "poll_results":[15, 25, 56, 4],
+            "voted":1,
+            "votes_count":200,
+            "author_user":{
+                            "id":3,
+                            "name":"Полиграф Полиграфович",
+                            "avatar":"http://placehold.it/84x84"
+                            }
+        }
