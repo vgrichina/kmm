@@ -80,6 +80,7 @@ API for KMM iOS app.
 Information related to individual users of service.
 
 ## User Info [/users/{userId}]
+// friendship_type: 0 - никто ни на кого не подписан(просто рядом), 1 - текущий юзер подписан на этого, 2 - этот юзер подписан на текущего, 3 - юзеры взаимоподписаны
 
 + Parameters
     + userId (optional, string, `me`) ... ID of user, `me` for currently logged-in user
@@ -104,6 +105,7 @@ Information related to individual users of service.
             "posts" : 2345,
             "subscribers" : 1234,
             "subscription" : 1234,
+            "friendship_type" : 2,
             "children"  : [
                             {
                                 "id"            : "someUniqueId",
