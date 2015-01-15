@@ -1534,26 +1534,10 @@ Feed info. Feed items and comments.
 
 + Response 200 (application/json)
 
-        { }
-        
-## Unsubscribe [/unsubscribe]
+        { 
+            "status" : "unsubscribed"
+        }
 
-### Unsubscribe from user posts [POST]
-+ Request
-
-    + Headers
-
-            Authorization: session_token
-
-    + Body
-
-            {
-                "user_id" : 1
-            }  
-
-+ Response 200 (application/json)
-
-        { }
         
 ## Friends [/friends/{type}]
 
