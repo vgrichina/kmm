@@ -883,8 +883,69 @@ Feed info. Feed items and comments.
                 }]
         }
 
-## Feed items with replies [/replies]
-//reply_type: 0 - feedback, 1 - subscribe update    
+## Feed items with subscribe replies [/reply_subscribers]
+### Get all feed items [GET]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+
+
++ Response 200 (application/json)
+
+         {
+            "count" : 10, 
+            "next" : "next_url",
+            "previous" : "previous_url".
+            "results" : 
+                [{
+                    "id":6,
+                    "content_type":null,
+                    "category":null,
+                    "title":"",
+                    "text":"",
+                    "creation_date":"2014-07-01T20:38:16Z",
+                    "images":[],
+                    "poll_question": "",
+                    "poll_choices":null,
+                    "poll_results":null,
+                    "voted":null,
+                    "votes_count":null,
+                    "number_comments":null,
+                    "readed":1,
+                    "replies" : 1,
+                    "author_user":{
+                                    "id":3,
+                                    "name":"Полиграф Полиграфович",
+                                    "avatar":"http://placehold.it/84x84"
+                                    }
+                },
+                {
+                    "id":7,
+                    "content_type":null,
+                    "category":null,
+                    "title":"",
+                    "text":"",
+                    "creation_date":"2014-07-01T20:38:16Z",
+                    "images":[],
+                    "poll_question": "",
+                    "poll_choices":null,
+                    "poll_results":null,
+                    "voted":null,
+                    "votes_count":null,
+                    "number_comments":null,
+                    "readed":1,
+                    "replies" : 1,
+                    "author_user":{
+                                    "id":3,
+                                    "name":"Полиграф Полиграфович",
+                                    "avatar":"http://placehold.it/84x84"
+                                    }
+                }]
+        }
+
+## Feed items with simple replies [/replies]
 ### Get all feed items [GET]
 + Request
 
@@ -915,7 +976,6 @@ Feed info. Feed items and comments.
                     "votes_count":null,
                     "number_comments":122,
                     "readed":0,
-                    "reply_type":0,
                     "replies" : 10,
                     "author_user":{
                                     "id":1,
@@ -938,7 +998,6 @@ Feed info. Feed items and comments.
                     "votes_count":null,
                     "number_comments":122,
                     "readed":0,
-                    "reply_type":0,
                     "replies" : 10,
                     "author_user":{
                                     "id":2,
@@ -966,7 +1025,6 @@ Feed info. Feed items and comments.
                     "votes_count":12,
                     "number_comments":0,
                     "readed":1,
-                    "reply_type":0,
                     "replies" : 10,
                     "author_user":{
                                     "id":3,
@@ -989,7 +1047,6 @@ Feed info. Feed items and comments.
                     "votes_count":null,
                     "number_comments":0,
                     "readed":1,
-                    "reply_type":0,
                     "replies" : 10,
                     "author_user":{
                                     "id":1,
@@ -1012,7 +1069,6 @@ Feed info. Feed items and comments.
                     "votes_count":null,
                     "number_comments":0,
                     "readed":1,
-                    "reply_type":0,
                     "replies" : 10,
                     "author_user":{
                                     "id":2,
@@ -1035,7 +1091,6 @@ Feed info. Feed items and comments.
                     "votes_count":null,
                     "number_comments":null,
                     "readed":1,
-                    "reply_type":1,
                     "replies" : 1,
                     "author_user":{
                                     "id":3,
