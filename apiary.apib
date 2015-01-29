@@ -106,6 +106,7 @@ Information related to individual users of service.
             "posts" : 2345,
             "subscribers" : 1234,
             "subscription" : 1234,
+            "nearby" : 1234,
             "friendship_type" : 2,
             "children"  : [
                             {
@@ -1591,11 +1592,74 @@ Feed info. Feed items and comments.
             "subscribers" : 123
         }
 
-        
-## Friends [/friends/{type}]
+## Nearby friends [/friends/nearby?user_id={id}]
 
 + Parameters
-    + type (required, string, `subscribers`) ... people type: 'subscribers', 'subscription', 'nearby'
+    + id (required, 123) ... id of the user for which we need the friends list
+
+### Get list of friends who are nearby [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: session_token
+           
+        
++ Response 200 (application/json)
+        
+        {
+            "count" : 10, 
+            "next" : "next_url",
+            "previous" : "previous_url",
+            "results" : 
+                        [{
+                            "id"        : 123,
+                            "name"      : "Василиса",
+                            "surname"   : "Пупкина",
+                            "age"       : "1978-06-05",
+                            "country"   : "Ukraine",
+                            "city"      : "Default city",
+                            "avatar"    : "http://placehold.it/220x220",
+                            "friendship_type" : 1
+                        }, 
+                        {
+                            "id"        : 231,
+                            "name"      : "Василиса",
+                            "surname"   : "Пупкина",
+                            "age"       : "1978-06-05",
+                            "country"   : "Ukraine",
+                            "city"      : "Default city",
+                            "avatar"    : "http://placehold.it/220x220",
+                            "friendship_type" : 0
+                        },
+                        {
+                            "id"        : 23,
+                            "name"      : "Василиса",
+                            "surname"   : "Пупкина",
+                            "age"       : "1978-06-05",
+                            "country"   : "Ukraine",
+                            "city"      : "Default city",
+                            "avatar"    : "http://placehold.it/220x220",
+                            "friendship_type" : 1
+                        }, 
+                        {
+                            "id"        : 231,
+                            "name"      : "Василиса",
+                            "surname"   : "Пупкина",
+                            "age"       : "1978-06-05",
+                            "country"   : "Ukraine",
+                            "city"      : "Default city",
+                            "avatar"    : "http://placehold.it/220x220",
+                            "friendship_type" : 0
+                        }]
+        }
+        
+## Friends [/friends/{type}?user_id={id}]
+
++ Parameters
+    + type (required, string, `subscribers`) ... people type: 'subscribers', 'subscription' 
+    + id (required, 123) ... id of the user for which we need the friends list
 
 ### Get list of friends [GET]
 // friendship_type: 0 - никто ни на кого не подписан(просто рядом), 1 - текущий юзер подписан на этого, 2 - этот юзер подписан на текущего, 3 - юзеры взаимоподписаны
@@ -1604,12 +1668,7 @@ Feed info. Feed items and comments.
     + Headers
 
             Authorization: session_token
-            
-    + Body
-            
-            {
-                "user_id" : 123
-            }
+           
         
 + Response 200 (application/json)
         
