@@ -1848,3 +1848,49 @@ Feed info. Feed items and comments.
                                     }
                 }]
         }
+
+
+# Group replies
+
+## User replies [/replies_count/]
+
+### Get list of user's posts [GET]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+            
++ Response 200 (application/json)
+
+        {
+            "replies_count" : 10, 
+            "subscribers_count" : 123
+        }
+        
+## Subscribers' replies [/replies/subscriber/read/]
+
+### Clear number of new subscribers [POST]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+            
++ Response 200 (application/json)
+
+        
+##  Replies for feed item [/replies/{id}/]
+
++ Parameters  
+    + id (required, '123') - id of the feed item which replies we want to mark as readed
+    
+### Read replies for feed item [POST]
+
++ Request
+
+    + Headers
+
+            Authorization: session_token
+            
++ Response 200 (application/json)
