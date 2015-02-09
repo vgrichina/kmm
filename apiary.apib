@@ -1575,6 +1575,65 @@ Feed info. Feed items and comments.
 
 # Group friends
 
+## User's new subsrcibers [replies/subscriber/]
+
+### Get list of new subscribers [GET]
++ Request
+
+    + Headers
+
+            Authorization: session_token
+            
++ Response 200 (application/json)
+    
+        {
+            "count" : 10, 
+            "next" : "next_url",
+            "previous" : "previous_url",
+            "results" : 
+                [{
+                    "id"        : 123,
+                    "name"      : "Василиса",
+                    "surname"   : "Пупкина",
+                    "age"       : "1978-06-05",
+                    "country"   : "Ukraine",
+                    "city"      : "Default city",
+                    "avatar"    : "http://placehold.it/220x220",
+                    "friendship_type" : 1
+                }, 
+                {
+                    "id"        : 231,
+                    "name"      : "Василиса",
+                    "surname"   : "Пупкина",
+                    "age"       : "1978-06-05",
+                    "country"   : "Ukraine",
+                    "city"      : "Default city",
+                    "avatar"    : "http://placehold.it/220x220",
+                    "friendship_type" : 0
+                },
+                {
+                    "id"        : 23,
+                    "name"      : "Василиса",
+                    "surname"   : "Пупкина",
+                    "age"       : "1978-06-05",
+                    "country"   : "Ukraine",
+                    "city"      : "Default city",
+                    "avatar"    : "http://placehold.it/220x220",
+                    "friendship_type" : 1
+                }, 
+                {
+                    "id"        : 231,
+                    "name"      : "Василиса",
+                    "surname"   : "Пупкина",
+                    "age"       : "1978-06-05",
+                    "country"   : "Ukraine",
+                    "city"      : "Default city",
+                    "avatar"    : "http://placehold.it/220x220",
+                    "friendship_type" : 0
+                }]
+        
+        }
+
 ## Search [search_friends/?q={username}]
 
 + Parameters
